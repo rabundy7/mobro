@@ -1,0 +1,9 @@
+<% form_remote_tag :url => add_mobros_model_path, :html => {:id => 'add_model_form'} do %>
+  <fieldset>
+    <label>Model Name:</label>
+    <%= text_field_tag 'model_name' %>
+    <div>
+      <%= submit_tag 'Add' %>
+    </div>
+  </fieldset>
+<% end %>

@@ -1,0 +1,9 @@
+<div class="assoc_container">
+  <div class="assoc_heading"><%= assoc_type %></div>
+	<% assocs.each do |assoc| %>
+	  <div class="assoc_model_container">
+      <%= render :partial => 'model_container', :locals => {:model => assoc.klass} %>
+	  </div>
+	<% end %>
+</div>
+<div style="clear:both;"></div>
