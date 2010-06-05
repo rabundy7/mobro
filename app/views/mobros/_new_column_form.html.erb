@@ -1,0 +1,8 @@
+<% form_remote_tag :url => create_mobros_column_path do %>
+  <%= hidden_field_tag 'model', model.name %>
+  <%= text_field_tag 'column_name' %>
+  <%= select_tag 'column_type', options_for_select(%w"binary boolean date datetime decimal float integer string text time timestamp".map{|c| [c, c]}) %>
+  <div>
+      <%= submit_tag 'Add' %>
+  </div>
+<% end %>

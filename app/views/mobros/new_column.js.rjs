@@ -1,0 +1,1 @@
+page.replace_html 'form_container', :partial => 'new_column_form', :locals => {:model => @model}

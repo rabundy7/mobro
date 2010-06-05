@@ -1,8 +1,14 @@
 <div id="model_container_<%= model.name %>" class="model_container">
-        <div class="model_heading"><%= model.name %></div>
+        <div class="model_heading"><%= model.name %>
+				  <div class="adder">
+				    <%= link_to_remote '+Col', :url => new_mobros_column_path + "?model_name=#{model.name}" %>
+						&nbsp;&nbsp;
+						+Assoc
+					</div>
+				</div>
         <% model.columns.sort{|a, b| a.name <=> b.name}.each do |column| %>
 				  <% col_style = column.name =~ /_id$/ ? 'font-weight:bold;' : '' %>
           <span style="<%= col_style %>"><%= column.name %> </span>&#160;(<%= column.type %>) 
-          <br/>
+          <br />
         <% end %>
 </div>
