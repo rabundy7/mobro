@@ -1,14 +1,30 @@
+<% type_options = %w"binary boolean date datetime decimal float integer string text time timestamp"  %>
+<% model_columns_sorted_by_name = model.columns.sort{|a, b| a.name <=> b.name} %>
+<% model_column_names_json = model_columns_sorted_by_name.map{|c| c.name}.to_json %>
+<% model_column_types_json = model_columns_sorted_by_name.map{|c| c.type}.to_json %>
 <div id="model_container_<%= model.name %>" class="model_container">
-        <div class="model_heading"><%= model.name %>
-				  <div class="adder">
-				    <%= link_to_remote '+Col', :url => new_mobros_column_path + "?model_name=#{model.name}" %>
-						&nbsp;&nbsp;
-						+Assoc
-					</div>
-				</div>
-        <% model.columns.sort{|a, b| a.name <=> b.name}.each do |column| %>
-				  <% col_style = column.name =~ /_id$/ ? 'font-weight:bold;' : '' %>
-          <span style="<%= col_style %>"><%= column.name %> </span>&#160;(<%= column.type %>) 
-          <br />
-        <% end %>
+        <div class="model_heading"><%= model.name %></div>
+				<% form_remote_tag :url => mobro_update_model_path do %>
+					<%= hidden_field_tag 'model_name', model.name %>
+					<%= hidden_field_tag 'deleted_columns' %>
+					<table id="model_field_table">
+		        <% @model_columns.each do |column| %>
+						  <tr id="<%= column.name %>_row">
+								<td><%= text_field_tag "#{column.name}_column", "#{column.name}", {:orig => "#{column.name}"} %></td>
+								<td><%= select_tag "#{column.name}_column_type", options_for_select(type_options, "#{column.type}"), {:orig => "#{column.type}"} %></td>
+								<td><%= link_to_function "delete", "flag_as_deleted($('#{column.name}_row'), '#{column.name}_column')" %></td>
+						  	<%= observe_field "#{column.name}_column", :function => "flag_as_modified(element);" %>
+						  	<%= observe_field "#{column.name}_column_type", :function => "flag_as_modified(element);" %>
+						  </tr>
+		        <% end %>
+						<tr class="new_item">
+							<td><%= text_field_tag '0_new_column', nil, :onchange => "create_new_row(event)" %></td>
+							<td><%= select_tag "0_new_column_type", options_for_select(type_options) %></td>
+							<td style='color:white;'>(new)</td>
+						</tr>
+					</table>
+				  <div>
+				      <%= submit_tag 'Save' %>
+				  </div>
+				<% end %>
 </div>

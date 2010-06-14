@@ -1,1 +1,0 @@
-page.insert_html :after, 'add_model_form', {:partial => 'model_container', :locals => {:model => model}}

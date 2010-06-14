@@ -8,8 +8,9 @@
 	<%= javascript_include_tag :defaults %>
 	<style>
 		.model_container{
-			  width:300px;
-			  overflow-x:auto;
+			  min-width:300px;
+			  /* width:300px; */
+			  /* overflow-x:auto; */
 			  border:1px;
 			  border-style:solid;
 			  background-color:#EEEEEE;
@@ -61,39 +62,82 @@
 			  font-size:x-large;
 			}
 			
-			.sidebar{
+			#form_container{
 			  float:left;
-			  height:100px;
-			  width:200px;
+			  /* height:100px; */
+			  /* width:200px; */
 			  background-color:#FFB86B;
 			  color:#814300;
 			  margin-left:100px;
-			  border:double;
-			  border-color:#A5723A;
-			}
-			
-			.sidebar li{
-			  list-style:none;
-			}
-			
-			.sidebar li:hover{
-			  background-color:#6BCBF0;
+				padding:0 0 0 0;
+			  /* border:double; */
+			  /* border-color:#A5723A; */
 			}
 			
 			.content_area{
 			  float:left;
 			}
-
-      .adder{
-      	font-size:small;
-				font-weight:bold;
-				color:#00FFAA;
-				float:right;
-				text-align:right;
-				padding-top:5px;
-				padding-right:5px;
-      }
+			
+			.new_item{
+				background-color:green;
+			}
+			
+			.modified_item{
+				background-color:yellow;
+			}
+			
+			.deleted_item{
+				background-color:red;
+			}
 	</style>
+	<script>
+		function flag_as_deleted(elem_row, column_name){
+			var dcv_raw = $('deleted_columns').value; 
+			var dcv = dcv_raw == '' ? new Array() : dcv_raw.split(/,/);
+			var deleting = true;
+			for (var i = 0; i < dcv.length; i++){
+				if (dcv[i] == column_name){
+					elem_row.setAttribute('class', '');
+					dcv.splice(i, 1);
+					deleting = false;
+					break;
+				}
+			}
+			if (deleting == true) {
+		  	elem_row.setAttribute('class', 'deleted_item');
+				dcv.push(column_name);
+		  }
+			$('deleted_columns').value = dcv.toString();
+		}
+		
+		function flag_as_modified(elem, idx){
+			if (elem.getAttribute('orig') != elem.value) {
+	  	  elem.setAttribute('class', 'modified_item');
+	    } else {
+	  	  elem.setAttribute('class', '');
+		  }
+		}
+		
+		function create_new_row(event){
+			var elem = event.element();
+			var row_parent = elem.ancestors()[2];
+			var last_row = row_parent.childElements().last();
+			var last_row_input = last_row.select('input').first();
+			if (last_row_input.value != ''){
+				var row_count = last_row_input.id.substring(0, last_row_input.id.indexOf('_'));
+				var new_input_id = (parseInt(row_count) + 1) + last_row_input.id.substring(last_row_input.id.indexOf('_'));
+				var new_row = last_row.cloneNode(true);
+				var new_row_input = new_row.select('input').first();
+				new_row_input.value = '';
+				new_row_input.name = new_input_id;
+				new_row_input.id = new_input_id;
+				var new_row_select = new_row.select('select').first();
+				new_row_select.name = new_input_id + '_type';
+				new_row_select.id = new_input_id + '_type';
+				row_parent.appendChild(new_row);
+			} 
+		}
+	</script>
 </head>
 <body>
 <span class="mobro_heading">MoBro</span><br />

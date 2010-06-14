@@ -1,1 +1,0 @@
-page.replace_html "model_container_#{model.name}", {:partial => 'model_container', :locals => {:model => model}}
